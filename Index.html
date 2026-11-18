@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PinkTalk 💗</title>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader-logo">💗</div>
+        <h2>PinkTalk</h2>
+        <p>Connecting hearts...</p>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="app-container hidden">
+        
+        <!-- Top Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="brand">
+                    <span class="logo-icon">💗</span>
+                    <h1>PinkTalk</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="camera-btn" title="Camera"><i class="fas fa-camera"></i></button>
+                    <button class="icon-btn" id="search-toggle-btn" title="Search"><i class="fas fa-search"></i></button>
+                    <button class="icon-btn" id="theme-toggle-btn" title="Theme"><i class="fas fa-moon"></i></button>
+                </div>
+            </div>
+            <!-- Search Bar (Hidden by default) -->
+            <div id="search-bar-container" class="search-bar hidden">
+                <input type="text" id="search-input" placeholder="Search chats, users, or messages...">
+                <button id="close-search"><i class="fas fa-times"></i></button>
+            </div>
+        </header>
+
+        <!-- Dynamic Pages Area -->
+        <main class="main-content">
+            
+            <!-- 1. CHATS TAB -->
+            <section id="tab-chats" class="tab-content active">
+                <div class="filter-pills">
+                    <span class="pill active">All</span>
+                    <span class="pill">Unread</span>
+                    <span class="pill">Groups</span>
+                </div>
+                <div id="chat-list" class="chat-list">
+                    <!-- Sample Chat Item (Data will load from Supabase in Step 4) -->
+                    <div class="chat-item" onclick="openChat('Wajiha 💗', 'https://i.pravatar.cc/150?img=5', 'Online')">
+                        <div class="avatar-wrapper">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="User" class="avatar">
+                            <span class="online-dot"></span>
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-row-top">
+                                <h4>Wajiha 💗</h4>
+                                <span class="time">09:30 AM</span>
+                            </div>
+                            <div class="chat-row-bottom">
+                                <p class="last-msg"><i class="fas fa-check-double read-tick"></i> PinkTalk নতুন ডিজাইনটা দারুণ হয়েছে!</p>
+                                <span class="unread-badge">2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-item" onclick="openChat('Ws Team Official 👥', 'https://i.pravatar.cc/150?img=12', '12 members')">
+                        <div class="avatar-wrapper">
+                            <img src="https://i.pravatar.cc/150?img=12" alt="Group" class="avatar">
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-row-top">
+                                <h4>Ws Team Official 👥</h4>
+                                <span class="time">Yesterday</span>
+                            </div>
+                            <div class="chat-row-bottom">
+                                <p class="last-msg">Raza: সবাইকে স্বাগতম আমাদের নতুন অ্যাপে!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating New Chat Button -->
+                <button class="fab-btn" id="new-chat-btn">
+                    <i class="fas fa-comment-medical"></i>
+                </button>
+            </section>
+
+            <!-- 2. STATUS (UPDATES) TAB -->
+            <section id="tab-status" class="tab-content">
+                <div class="status-my-card">
+                    <div class="avatar-wrapper">
+                        <img id="my-status-avatar" src="https://i.pravatar.cc/150?img=11" alt="My Status" class="avatar">
+                        <span class="add-status-icon"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="status-info">
+                        <h4>My Status</h4>
+                        <p>Tap to add status update</p>
+                    </div>
+                </div>
+                <h5 class="section-label">Recent Updates</h5>
+                <div id="status-list" class="status-list">
+                    <div class="status-item">
+                        <div class="status-ring">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Status">
+                        </div>
+                        <div class="status-info">
+                            <h4>Wajiha 💗</h4>
+                            <p>25 minutes ago</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. CALLS TAB -->
+            <section id="tab-calls" class="tab-content">
+                <div class="call-list">
+                    <div class="call-item">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Caller" class="avatar">
+                        <div class="call-info">
+                            <h4>Wajiha 💗</h4>
+                            <p class="call-meta"><i class="fas fa-arrow-down incoming"></i> Today, 08:15 AM</p>
+                        </div>
+                        <button class="call-action-btn"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. SETTINGS & PROFILE TAB -->
+            <section id="tab-settings" class="tab-content">
+                <div class="profile-card">
+                    <img id="user-profile-pic" src="https://i.pravatar.cc/150?img=11" alt="Profile" class="profile-large">
+                    <h3 id="user-profile-name">Raza (Wasi)</h3>
+                    <p id="user-profile-bio">Hey there! I am using PinkTalk 💗</p>
+                </div>
+
+                <div class="settings-menu">
+                    <div class="menu-item"><i class="fas fa-key"></i> <span>Account & Privacy</span></div>
+                    <div class="menu-item"><i class="fas fa-palette"></i> <span>Pink & Blue Themes</span></div>
+                    <div class="menu-item"><i class="fas fa-bell"></i> <span>Notifications</span></div>
+                    <div class="menu-item"><i class="fas fa-database"></i> <span>Storage & Data</span></div>
+                    <div class="menu-item"><i class="fas fa-question-circle"></i> <span>Help & Support</span></div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-target="tab-chats">
+                <i class="fas fa-comment-dots"></i>
+                <span>Chats</span>
+            </button>
+            <button class="nav-item" data-target="tab-status">
+                <i class="fas fa-circle-notch"></i>
+                <span>Status</span>
+            </button>
+            <button class="nav-item" data-target="tab-calls">
+                <i class="fas fa-phone-alt"></i>
+                <span>Calls</span>
+            </button>
+            <button class="nav-item" data-target="tab-settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- ACTIVE CHAT WINDOW (Full Screen Overlay) -->
+    <div id="chat-window" class="chat-window hidden">
+        <header class="chat-window-header">
+            <button class="back-btn" onclick="closeChat()"><i class="fas fa-arrow-left"></i></button>
+            <img id="chat-header-avatar" src="" alt="Avatar" class="avatar-small">
+            <div class="chat-header-info">
+                <h4 id="chat-header-name">User Name</h4>
+                <span id="chat-header-status">Online</span>
+            </div>
+            <div class="chat-header-actions">
+                <button class="icon-btn"><i class="fas fa-video"></i></button>
+                <button class="icon-btn"><i class="fas fa-phone"></i></button>
+            </div>
+        </header>
+
+        <div id="messages-area" class="messages-area">
+            <div class="message received">
+                <p>আসসালামু আলাইকুম! PinkTalk-এ স্বাগতম 💗</p>
+                <span class="msg-time">09:28 AM</span>
+            </div>
+            <div class="message sent">
+                <p>ওয়ালাইকুম আসসালাম! কালার আর ডিজাইনটা দারুণ হয়েছে 🌸</p>
+                <span class="msg-time">09:30 AM <i class="fas fa-check-double"></i></span>
+            </div>
+        </div>
+
+        <footer class="chat-input-area">
+            <button class="attach-btn"><i class="fas fa-smile"></i></button>
+            <input type="text" id="message-input" placeholder="Message...">
+            <button class="attach-btn"><i class="fas fa-paperclip"></i></button>
+            <button id="send-msg-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+      </html>
+                                               
